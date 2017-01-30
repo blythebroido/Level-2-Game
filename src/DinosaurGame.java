@@ -18,5 +18,6 @@ public class DinosaurGame {
 		frame.add(dinogamepanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		dinogamepanel.startGame();
+		frame.addKeyListener(dinogamepanel);
 	}
 }
