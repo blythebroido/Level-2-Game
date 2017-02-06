@@ -1,22 +1,21 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Cactus extends DinoGameObject{
-int speed;
-	Cactus(int x, int y, int width, int height, int speed) {
+public class Bird extends DinoGameObject{
+
+	Bird(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		this.speed = speed;
 	}
 	
 	public void update(){
-		x-=speed;
+		x-=13;
 		collisionBox.setBounds(x, y, width, height);
 	}
 	
 	public void draw(Graphics g){
-		g.setColor(Color.BLUE);
+		g.setColor(Color.MAGENTA);
 		g.fillRect(x, y, width, height);
-		g.setColor(Color.GREEN);
+		g.setColor(Color.BLACK);
 		g.drawRect(collisionBox.x, collisionBox.y, collisionBox.width, collisionBox.height);
 	}
 

@@ -11,7 +11,7 @@ public class Background extends DinoGameObject {
 	}
 	
 	public void draw(Graphics g){
-		g.setColor(Color.MAGENTA);
+		g.setColor(Color.WHITE);
 		g.fillRect(x, y, width, height);
 	}
 }
