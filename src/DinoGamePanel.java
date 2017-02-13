@@ -37,6 +37,11 @@ public class DinoGamePanel extends JPanel implements ActionListener, KeyListener
 	int currentDifficulty = easy;
 	long difficultyTimer = 0;
 	int difficultyWaitTime = 30000;
+	final int menuState = 0;
+	final int gameState = 1;
+	final int endState = 2;
+	int currentState = menuState;
+
 	
 
 	void startGame() {
@@ -83,24 +88,23 @@ public class DinoGamePanel extends JPanel implements ActionListener, KeyListener
 		if(r.nextInt(100)==0){
 			addCactus();
 		}
-		if(rb.nextInt(100)==0){
-			if(currentDifficulty == hard){
-			addBird();
-			}
-		}
+//		if(rb.nextInt(50)==0){
+//			if(currentDifficulty == hard){
+//			addBird();
+//			}
+	//	}
 		if(shouldAdd==false && cactusTimer ==0){
 			cactusTimer = System.currentTimeMillis();
 		}
 		if(System.currentTimeMillis()-cactusTimer > minimumWait){
 				shouldAdd = true;
-				cactusTimer=0;
 		}
 		
 		if(shouldAddBird==false && birdTimer ==0){
 			birdTimer = System.currentTimeMillis();
 		}
 		if(System.currentTimeMillis()-birdTimer > minimumWaitBird){
-				shouldAddBird = true;
+
 				birdTimer=0;
 		}
 		
@@ -122,32 +126,36 @@ public class DinoGamePanel extends JPanel implements ActionListener, KeyListener
 		if(shouldAdd == true){
 			if(currentDifficulty == easy){
 				cacti.add(new Cactus(900, 375, 50, 100, 7));
+				shouldAddBird = false;
 			}
 			else if(currentDifficulty == medium){
 				cacti.add(new Cactus(900, 375, 50, 100, 10));
 				minimumWait = 500;
 			}
 			else if(currentDifficulty == hard){
-				cacti.add(new Cactus(900, 375, 50, 100, 13));
+				Random a = new Random();
+				boolean addornot = a.nextBoolean();
+				if(addornot == true){
+					cacti.add(new Cactus(900, 375, 50, 100, 13));
+				}
+				else{
+					birds.add(new Bird(850, 420, 50, 30));
+				}
+				cactusTimer = 0;
+				birdTimer = 0;
+				minimumWait = 1000;
 			}
 		shouldAdd = false;
 		}
 	}
-	
-	public void addBird(){
-		if(shouldAddBird == true){
-			birds.add(new Bird(850, 420, 50, 30));
-			shouldAddBird = false;
-		}
-	}
+//	
+//	public void addBird(){
+//		if(shouldAddBird == true){
+//			birds.add(new Bird(850, 420, 50, 30));
+//			shouldAddBird = false;
+//		}
+//		
+//	}
 
-	void drawEasy(){
-		
-	}
-	void drawMedium(){
-		
-	}
-	void drawHard(){
-		
-	}
+//	void update 
 }

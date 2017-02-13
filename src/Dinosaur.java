@@ -36,6 +36,8 @@ public class Dinosaur extends DinoGameObject {
 	}
 	
 	public void jump(){
+		if(yVelocity==0&&y==ground){
 		yVelocity -= jumpPower;
+		}
 	}
 }
