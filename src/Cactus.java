@@ -9,6 +9,7 @@ int speed;
 	}
 	
 	public void update(){
+		super.update();
 		x-=speed;
 		collisionBox.setBounds(x, y, width, height);
 	}

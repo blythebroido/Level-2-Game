@@ -8,6 +8,7 @@ public class Bird extends DinoGameObject{
 	}
 	
 	public void update(){
+		super.update();
 		x-=13;
 		collisionBox.setBounds(x, y, width, height);
 	}

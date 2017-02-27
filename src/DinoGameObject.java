@@ -30,6 +30,7 @@ public class DinoGameObject {
 
 	public void update() {
 		// TODO Auto-generated method stub
+		collisionBox.setBounds(x, y, width, height);
 
 	}
 }
