@@ -15,7 +15,7 @@ public class Bird extends DinoGameObject{
 	
 	public void draw(Graphics g){
 		g.drawImage(DinoGamePanel.bird, x, y, width, height, null);
-		g.setColor(Color.GRAY);
+		g.setColor(Color.WHITE);
 		g.drawRect(collisionBox.x, collisionBox.y, collisionBox.width, collisionBox.height);
 	}
 
