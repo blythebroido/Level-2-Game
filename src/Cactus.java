@@ -15,9 +15,8 @@ int speed;
 	}
 	
 	public void draw(Graphics g){
-		g.setColor(Color.BLUE);
-		g.fillRect(x, y, width, height);
-		g.setColor(Color.GREEN);
+		g.drawImage(DinoGamePanel.cactus, x, y, width, height, null);
+		g.setColor(Color.gray);
 		g.drawRect(collisionBox.x, collisionBox.y, collisionBox.width, collisionBox.height);
 	}
 

@@ -1,15 +1,17 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.Timer;
-
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class DinoGamePanel extends JPanel implements ActionListener, KeyListener {
@@ -18,13 +20,23 @@ public class DinoGamePanel extends JPanel implements ActionListener, KeyListener
 	ArrayList<Bird> birds = new ArrayList<Bird>();
 
 	Timer timer;
-	long gameTimer=0;
+	long gameTimer = 0;
+	boolean sleep = false;
 
 	DinoGamePanel() {
 		timer = new Timer(1000 / 60, this);
+		try {
+			dino = ImageIO.read(this.getClass().getResourceAsStream("dinoimage.png"));
+			cactus = ImageIO.read(this.getClass().getResourceAsStream("cactusimage.png"));
+			bird = ImageIO.read(this.getClass().getResourceAsStream("birdimage.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	Dinosaur dinosaur = new Dinosaur(100, 10, 50, 50);
+	Background background = new Background(0,0, 800,500);
 	ObjectManager objectmanager = new ObjectManager();
 	Random r = new Random();
 	Random rb = new Random();
@@ -44,17 +56,20 @@ public class DinoGamePanel extends JPanel implements ActionListener, KeyListener
 	final int gameState = 1;
 	final int endState = 2;
 	int currentState = menuState;
-	
-	public static BufferedImage dino;
-	public static BufferedImage rocketImg;
-	public static BufferedImage bulletImg;
 
+	Font titleFont = new Font("Times New Roman", Font.BOLD, 48);
+	Font instructionFont = new Font("Times New Roman", Font.PLAIN, 24);
+
+	public static BufferedImage dino;
+	public static BufferedImage cactus;
+	public static BufferedImage bird;
 
 	void startGame() {
 		timer.start();
 	}
 
 	public void paintComponent(Graphics g) {
+		background.draw(g);
 		dinosaur.draw(g);
 		for (Cactus c : cacti) {
 			c.draw(g);
@@ -75,13 +90,19 @@ public class DinoGamePanel extends JPanel implements ActionListener, KeyListener
 
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			dinosaur.jump();
+		}
 
+		if (currentState == menuState) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				currentState = currentState + 1;
+				gameTimer = System.currentTimeMillis();
+			}
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_ENTER){
-			currentState=currentState + 1;
-			gameTimer=System.currentTimeMillis();
+		if(e.getKeyCode() == KeyEvent.VK_P){
+			System.exit(0);
 		}
+
 	}
 
 	public void keyTyped(KeyEvent e) {
@@ -97,19 +118,26 @@ public class DinoGamePanel extends JPanel implements ActionListener, KeyListener
 		dinosaur.update();
 		if (currentState == menuState) {
 			updatemenuState();
-		} 
-		else if(currentState == gameState){
+		} else if (currentState == gameState) {
 			updategameState();
-		}
-		else if (currentState == endState) {
+		} else if (currentState == endState) {
 			updateendState();
 		}
-		
-		if(objectmanager.checkCollision(dinosaur, birds, cacti)){
-			currentState=endState;
-			gameTimer=System.currentTimeMillis()-gameTimer;
+
+		if (currentState == gameState) {
+			if (objectmanager.checkCollision(dinosaur, birds, cacti)) {
+				currentState = endState;
+				gameTimer = System.currentTimeMillis() - gameTimer;
+
+			}
 		}
-		
+		if (currentState == gameState) {
+			if (dinosaur.y < 0) {
+				currentState = endState;
+				gameTimer = System.currentTimeMillis() - gameTimer;
+			}
+		}
+	
 	}
 
 	public void addCactus() {
@@ -187,17 +215,34 @@ public class DinoGamePanel extends JPanel implements ActionListener, KeyListener
 	void drawmenuState(Graphics g) {
 		g.setColor(Color.blue);
 		g.fillRect(0, 0, 800, 500);
-	}
+		g.setFont(titleFont);
+		g.setColor(Color.WHITE);
+		g.drawString("Dinosaur Game!", 250, 100);
+		g.setFont(instructionFont);
+		g.setColor(Color.WHITE);
+		g.drawString("Press the up arrow to jump. Avoid cacti and birds, and don't hit the roof!", 50, 200);
+		g.setColor(Color.WHITE);
+		g.drawString("Press ENTER to start!", 275, 300);
+		g.setColor(Color.WHITE);
+		g.drawString("Press P at any time to exit", 275, 400);
 
+	}
 
 	void drawendState(Graphics g) {
 		g.setColor(Color.red);
 		g.fillRect(0, 0, 800, 500);
+		g.setFont(titleFont);
 		g.setColor(Color.BLACK);
-		g.drawString("GAME OVER", 90, 100);
+		g.drawString("GAME OVER", 250, 100);
+		g.setFont(instructionFont);
 		g.setColor(Color.BLACK);
-		g.drawString("You survived for  " + gameTimer/1000 + " seconds.", 140, 300);
+		g.drawString("You died! You survived for  " + gameTimer / 1000 + " seconds.", 200, 200);
 		g.setColor(Color.BLACK);
-		g.drawString("Press ENTER to enter the game where you left off. Quit and restart to start over", 85, 500);
+		g.drawString("You reached level " + currentDifficulty + "!", 200, 300);
+		g.setFont(instructionFont);
+		g.setColor(Color.BLACK);
+		g.drawString("Quit and restart to start over", 200, 400);
+
 	}
+
 }
